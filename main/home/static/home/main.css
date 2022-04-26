@@ -1,0 +1,464 @@
+
+
+.wrapper{
+    width: 550px;
+    height: 220px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    border-radius: 15px;
+
+    transform: translate(-50%, -50%);
+    
+    backdrop-filter: blur(3px) grayscale(0.1); 
+    
+}
+
+.background {
+    filter: blur(4px);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
+.foreground {
+    backdrop-filter: blur(10px);
+  } /* No .wrapper needed! */
+
+  .foreground .grid-container {
+    display: grid;
+    justify-content: flex-start;
+    grid-template-columns: auto auto auto auto auto;
+
+  }
+  .foreground .grid-item {
+    color: #ffffffd6;
+    width: 110px;
+    height: 110px;
+  }
+
+  .foreground .shortcut_button{
+    text-decoration: none;
+  }
+
+  .foreground .shortcut_button .grid-item button{
+    opacity: 0;
+    background: url(/static/img/delete.png); 
+    width: 16px; 
+    height: 16px; 
+    border: 0px; 
+    cursor:pointer;
+    float: right;
+    margin: 5px;
+    top: 0%;
+  }
+
+  .foreground .shortcut_button .grid-item button:focus { outline: none; }
+
+  .foreground .shortcut_button .grid-item img {
+    width: 40px;
+    height: 40px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5px;
+  }
+
+  .foreground .grid-item:hover + .button {
+    opacity: 1;
+  }
+
+  .foreground .grid-item button:hover {
+    opacity: 1;
+  }
+
+  .foreground .shortcut_button .grid-item{
+    display: grid;
+    grid-template-columns: auto;
+  }
+
+  .foreground .grid-item h1{
+    margin-top: 5%; 
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .foreground .grid-item:hover{
+    background: rgba(144, 144, 144, 0.13);    
+  }
+
+
+
+
+/* The side navigation menu */  
+.sidenav {
+    height: 100%; /* 100% Full-height */
+    width: 0; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: rgba(37, 37, 37, 0.228); /* Black*/
+    backdrop-filter: blur(8px);
+    overflow-x: hidden; /* Disable horizontal scroll */
+    overflow-y: hidden;
+    padding-top: 60px; /* Place content 60px from the top */
+    transition: 0.1s; /* 0.5 second transition effect to slide in the sidenav */
+  }
+  
+  /* The navigation menu links */
+  .sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+  }
+
+  .sidenav h1 {
+    color: #e4e4e4b7;
+    font-weight: 5;
+    font-size: 25px;
+    text-align: center;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #81818130;;
+  }
+
+  .sidenav h2 {
+    color: #e4e4e4b7;
+    font-weight: 3;
+    font-size: 15px;
+    text-align: center;
+  }
+  
+  /* When you mouse over the navigation links, change their color */
+  .sidenav a:hover {
+    color: #f1f1f1;
+  }
+  
+  /* Position and style the close button (top right corner) */
+  .sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    color: rgba(224, 224, 224, 0.797);
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+  }
+  
+  /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+  #main {
+    transition: margin-left .5s;
+    padding: 20px;
+  }
+  
+  /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+  @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+  }
+
+/* Form */
+
+.AddShortcut{
+  height: 300px; /* 100% Full-height */
+  width: 0; /* 0 width - change this with JavaScript */
+
+  z-index: 1; /* Stay on top */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+  background-color: rgba(37, 37, 37, 0.42); 
+  /*background-color: rgba(68, 68, 68, 0.082);*/
+  backdrop-filter: blur(35px);
+  overflow-x: hidden;
+  overflow-y: hidden;
+  display: flex;
+  overflow: hidden;
+  display: grid;
+  place-items: center;  
+}
+
+.AddShortcut .btn{
+  border: 0px;
+  width: 150px;
+  color: #ffffffd6;
+  background-color: rgba(49, 47, 54, 0.612);
+  border-radius: 15px;
+  backdrop-filter: blur(10px) opacity(0.5);
+  font-weight: 1;
+}
+
+.AddShortcut h1{
+  padding-top: 15px;
+  padding-bottom: 15px;
+  text-align: center;
+  color: #ffffffd6;
+  font-size: 25px;
+  font-weight: 1;
+}
+
+.AddShortcut .btn:hover{
+  backdrop-filter: blur(0px) opacity(0.5);
+}
+
+.shortcutForm{
+  width: 300px;
+  height: 40px;
+  padding: 15px;
+  background-color: rgba(95, 95, 95, 0.08);
+  border: 0px solid;
+  border-radius: 15px;
+  backdrop-filter: blur(1px) opacity(0.6);
+  font-size: 15px;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  color: rgb(215, 212, 212);
+}
+
+.shortcutForm::placeholder { 
+  color: rgba(255, 255, 255, 0.669);
+  font-weight: 1;
+  opacity: 1; /* Firefox */
+}
+
+
+/* Widgets */
+
+.stock-widget{
+  margin-top: 30px;
+  margin-left: 8px;
+  border-right: 1px solid #81818168;
+  backdrop-filter: blur(1px); 
+}
+
+.stock-widget h1 {
+  font-weight: lighter;
+  text-align: center;
+  font-size: 20px;
+  color: #d1d1d1;
+} 
+
+.sidenav .widget-1{
+  height: 200px;
+}
+
+.sidenav .widget-2 h2{
+  border-top: 1px solid #81818130;
+  padding-top: 10px;
+}
+
+.sidenav .remove-widgets{
+  border-top: 1px solid #81818130;
+  margin-top: 20px;
+}
+
+.sidenav .remove-widgets h2{
+  margin-top: 15px;
+}
+
+.sidenav .change-background{
+  border-top: 1px solid #81818130;
+  margin-top: 20px;
+}
+
+.sidenav .change-background h2{
+  padding-top: 15px;
+}
+
+.sidenav .change-background{
+  display: grid;
+  place-items: center;
+}
+
+
+.sidenav .widget-2 .weather-icons{
+  padding-top: 25px;
+  width: 75%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.sidenav form {
+  display: inline;
+  width: 290px;
+}
+
+.sidenav form input {
+  border: 1px solid #e4e4e439;
+  color: #e4e4e4b7;
+  font-weight: 5;
+  margin-left: 10px;
+  float: left;
+  padding: 5px; 
+  height: 35px;
+}
+
+.sidenav input {
+  border: 1px solid #e4e4e439;
+  color: #e4e4e4b7;
+  font-weight: 5;
+  margin-left: 10px;
+  float: left;
+  padding: 5px; 
+  height: 35px;
+}
+
+.sidenav .remove-widgets input{
+  border: 1px solid #e4e4e439;
+  color: #e4e4e4b7;
+  font-weight: 5;
+  margin-left: 10px;
+  float: left;
+  padding: 5px; 
+  height: 35px;
+}
+
+.sidenav .remove-widgets form{
+  display: grid;
+  place-items: center;
+}
+
+.sidenav .remove-widgets{
+  display: grid;
+  place-items: center;
+}
+
+.sidenav .stockForm{
+  background-color: rgba(95, 95, 95, 0.08);
+  border: 0px solid;
+  border-radius: 5px;
+  backdrop-filter: blur(1px) opacity(0.6);
+  font-size: 15px;
+  font-weight: 3;
+  font-size: 14px;
+}
+
+.sidenav .stockForm::placeholder { 
+  color: #e4e4e475;
+  opacity: 1; /* Firefox */
+}
+
+.weather-widget{
+  width: 280px;
+  height: 120px;
+  margin-top: 30px;
+  margin-left: 8px;
+  border-right: 1px solid #81818168;  
+  backdrop-filter: blur(1px); 
+}
+
+.weather-widget h1 {
+  font-weight: lighter;
+  text-align: center;
+  font-size: 20px;
+  color: #d1d1d1;
+} 
+
+.weather-widget .grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  margin: auto;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.weather-widget .lower-content {
+  display: grid;
+  grid-template-columns: auto auto;
+  margin: auto;
+  justify-content: space-between;
+  margin-left: 80px;
+  margin-right: 80px;
+  margin-top: 15px;
+}
+
+
+
+/* The Background Picture Change Menu */
+
+.BackgroundMenu {
+  height: 80%; /* 100% Full-height */
+  width: 0; /* 0 width - change this with JavaScript */
+
+  z-index: 1; /* Stay on top */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  border-radius: 5px;
+  transform: translate(-50%, -50%);
+  background-color: rgba(37, 37, 37, 0.42); /* Black*/
+  backdrop-filter: blur(20px);
+  overflow-x: hidden;
+  overflow-y: hidden; /* Disable horizontal scroll */
+  padding-top: 60px; /* Place content 60px from the top */
+  transition: 0.1s; /* 0.5 second transition effect to slide in the sidenav */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.BackgroundMenu .closebtn {
+  position: absolute;
+  top: 0;
+  float: right;
+  color: rgba(224, 224, 224, 0.797);
+  right: 25px;
+  font-size: 30px;
+}
+
+.BackgroundMenu input{
+  width: 140px; 
+  float: right;
+  border: 1px solid #e4e4e439;
+  color: #e4e4e4b7;
+  font-weight: 5;
+  margin-left: 25px;
+  margin-bottom: 25px;
+  float: left;
+  padding: 5px; 
+  height: 35px;
+  margin: 15px;
+}
+
+.BackgroundMenu .grid-container {
+  overflow-y: auto;
+  display: grid;
+  justify-content: flex-start;
+  grid-template-columns: auto auto auto;
+  margin-bottom: 10px;
+}
+
+.BackgroundMenu .grid-container .grid-item{
+  width: 150px;
+  height: 150px;
+  margin: 10px;
+}
+
+
+/* Scroll bar */
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #c7c7c713;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(136, 136, 136, 0.55);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

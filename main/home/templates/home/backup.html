@@ -1,0 +1,203 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'home/main.css' %}">
+
+    <!--Chart js-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+</head>
+
+<body>
+
+     <div class="wrapper">
+        <div class="background"></div>
+        <div class="foreground">
+            <div class="shortcuts">
+                <div class="grid-container">
+
+                    {% for shortcut in shortcuts %}
+                        <div class="grid-item">
+                            <a href="{% url 'delete_shortcut' shortcut.id %}" style="float: right; margin-right: 4px;" class="delete_button">
+                                <img src="/static/img/delete.png">
+                            </a>
+                            <input type="image" src="/static/img/{{shortcut}}.png" name="saveForm" class="btTxt submit" id="saveForm" onclick="location.href='{{shortcut.site_url}}'">
+                            <h1>{{shortcut}}</h1>
+                        </div>
+                    {% endfor %}
+
+
+                    <div class="grid-item">
+                        <input type="image" src="/static/img/add.png" name="saveForm" class="btTxt submit" id="saveForm" onclick="location.href='/add-shortcut'">
+                        <h1>Add Shortcut</h1>
+                    </div>
+
+                  </div>      
+            </div>
+        </div>
+    </div>
+
+
+    {% for stock, current_price in combined_list %}
+
+    <div class="stock-widget" style="width: 280px; height: 120px;">
+        <h1>{{stock}} - {{current_price}}</h1>
+        <canvas id="Chart-{{forloop.counter0}}"></canvas>
+    </div>
+
+    {% endfor %}
+
+    {% for stock, color in combined_list2 %}
+    <script>
+    
+        const ctx{{forloop.counter}} = document.getElementById('Chart-{{forloop.counter0}}').getContext('2d');
+        const myChart{{forloop.counter}} = new Chart(ctx{{forloop.counter}}, {
+            type: 'line',
+            data: {
+                labels: {{labels.0|safe}},
+                datasets: [{
+                    label: '# of Votes',
+                    data: {{stock|safe}},
+                    backgroundColor: [
+                        'rgba({{color}},0.1)',
+                    ],
+                    borderColor: [
+                        'rgb({{color}})',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            title: {
+            display: false,
+            text: ''
+            },
+            tooltips: {
+            enabled: false,
+            mode: 'label',
+            },
+            elements:{
+                point:{
+                    borderWidth: 0,
+                    radius: 0,
+                    backgroundColor: 'rgba(0,0,0,0)'
+                        }
+                    
+            },
+            legend: {
+                display: false
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    ticks: {
+                        fontColor: 'rgba(255, 255, 255, 0.4',
+                        maxTicksLimit: 5,
+                        maxRotation: 0,
+                        minRotation: 0,
+                        fontSize: 10,
+                        fontStyle: 0,
+                    },
+                    gridLines: {
+                    display: false,
+                    color: 'rgba(255, 255, 255, 0.1)',
+                    borderDash: [8, 4],
+                    },
+                    scaleLabel: {
+                    display: false,
+                    labelString: ''
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    ticks: {
+                        fontColor: 'rgba(255, 255, 255, 0.4',
+                        maxTicksLimit: 5,
+                        maxRotation: 0,
+                        minRotation: 0,
+                        fontSize: 10,
+                        fontStyle: 0,
+                    },
+                    gridLines: {
+                    display: false,
+                    color: 'rgba(255, 255, 255, 0.1)',
+                    borderDash: [8, 4],
+                    },
+                    scaleLabel: {
+                    display: false,
+                    labelString: ''
+                    }
+                }],
+            }
+        }
+    });
+    </script>
+    {% endfor %}
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <h1>Widgets</h1>
+
+        <div style="width: 300px; height: 150px; border: 1px solid rgba(128, 128, 128, 0.221);">
+            <h2>Stock Price</h2>
+        
+    </div>
+
+        
+    <!-- Use any element to open the sidenav -->
+    <span onclick="openNav()" style="margin-left: 5px; height: 40px;">
+        <img src="/static/img/settings.png">
+    </span>
+      
+    <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+    <div id="main">h 
+        ...
+    </div>
+
+    <script>
+
+        /* Set the width of the side navigation to 250px */
+        function openNav() {
+        document.getElementById("mySidenav").style.width = "300px";
+        }
+
+        /* Set the width of the side navigation to 0 */
+        function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+        }
+
+    </script>
+
+
+    {% block content %}{% endblock %}
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+
+
+</html>

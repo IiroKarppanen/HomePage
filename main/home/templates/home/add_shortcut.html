@@ -1,0 +1,17 @@
+{% extends "home/base.html" %}
+
+{% block content %}
+
+<div class="add-shortcut">
+    <div clas="form-group">
+        <form method="POST">
+            {% csrf_token %}
+            <h1>Create Shortcut</h1>
+            {{ form.as_p }}
+            <input type="submit"class="btn btn-outline-secondary" value="Add Shortcut" style="margin-top: 30px;">
+            <input type="submit" class="btn btn-outline-secondary" value="Cancel" style="margin-top: 30px; " onclick="location.href='http://127.0.0.1:8000/'">
+        </form>
+    </div>
+</div>
+
+{% endblock content%}

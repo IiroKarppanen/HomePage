@@ -1,0 +1,374 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'home/main.css' %}">
+
+    <!--Chart js-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+</head>
+
+<body style="background: #000000 url('/static/img/{{site_background}}'); background-size: cover;">
+     <div class="wrapper">
+        <div class="background"></div>
+        <div class="foreground">
+            <div class="shortcuts">
+                <div class="grid-container">
+
+                    {% for shortcut in shortcuts %}
+                        <a href="{{shortcut.site_url}}" class="shortcut_button">
+                                <div class="grid-item">
+                                    <form style="display: inline" action="{% url 'delete_shortcut' shortcut.id %}" method="get">
+                                        <button></button>
+                                    </form>
+                                    <img src="/static/img/{{shortcut}}.png">
+                                    <h1>{{shortcut}}</h1>
+                                </div>
+                        </a>                        
+                    {% endfor %}
+
+                    <a onclick="openAddShortcut()" class="shortcut_button">
+                        <div class="grid-item">
+                            <h8 style="height: 16px; margin: 5px;"></h8>
+                            <img src="/static/img/add.png">
+                            <h1>Add Shortcut</h1>
+                        </div>
+                    </a>
+                  </div>      
+            </div>
+        </div>
+    </div>
+
+    <div class="AddShortcut" id = "AddShortcut">
+        <form method="POST">
+            {% csrf_token %}
+            <h1>Create Shortcut</h1>
+            {{ form3.as_p }}
+            <input type="submit"class="btn btn-outline-secondary" value="Add Shortcut" name = "addShortcut" style="margin-top: 30px;">
+            <input type="button" class="btn btn-outline-secondary" value="Cancel" name = "exit" style="margin-top: 30px;" href="javascript:void(0)" onclick="closeAddShortcut()">
+        </form>
+    </div>
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <h1>Widgets</h1>
+
+        <div class="widget-1">
+            <h2>Stock Price Tracker</h2>
+
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit"class="btn btn-outline-dark" value="Add Widget" name="submit-form1">
+            </form>
+
+            <div style="width: 275px; height: 120px;">
+                <canvas id="ExampleChart"></canvas>
+            </div>
+        </div>
+        <div class="widget-2">
+            <h2>Weather Widget</h2>
+
+            <form method="POST">
+                {% csrf_token %}
+                {{ form2.as_p }}
+                <input type="submit"class="btn btn-outline-dark" value="Add Widget" name="submit-form2">
+            </form>
+
+            <div class="weather-icons">
+                <img src="/static/img/weatherWidget/day/clear sky.png">
+                <img src="/static/img/weatherWidget/day/cloud-wind.png">
+                <img src="/static/img/weatherWidget/day/part-cloud-rain.png">
+            </div>
+        </div>
+        <div class="remove-widgets">
+            <h2>Remove Widgets</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="submit"class="btn btn-outline-dark" value="Remove" name="remove-widgets" style="margin-top: 15px;">
+            </form>
+        </div>
+        <div class="change-background">
+            <h2>Background</h2>
+            <input type="submit" class="btn btn-outline-dark" value="Change Background" name="remove-widgets" style="margin-top: 15px;" onclick="openBackgroundMenu()">
+        </div>
+
+    </div>
+      
+    <span style="margin-top: 10px;" onclick="openNav()">
+        <img src="/static/img/settings.png">
+    </span>
+      
+    <script>
+      function openNav() {
+        document.getElementById("mySidenav").style.width = "290px";
+      }
+      
+      function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+      }
+
+      function openBackgroundMenu() {
+        document.getElementById("BackgroundMenu").style.width = "530px";
+      }
+      
+      function closeBackgroundMenu() {
+        document.getElementById("BackgroundMenu").style.width = "0";
+      }
+
+      function openAddShortcut() {
+        document.getElementById("AddShortcut").style.width = "400px";
+      }
+      
+      function closeAddShortcut() {
+        document.getElementById("AddShortcut").style.width = "0";
+      }
+    </script>
+
+
+    {% for stock in stocks %}
+
+    <div class="stock-widget" style="width: 280px; height: 120px;">
+        <h1>{{stock.ticker}} - {{stock.current_price}}</h1>
+        <canvas id="Chart-{{forloop.counter0}}"></canvas>
+    </div>
+
+    {% endfor %}
+
+    <script>
+    
+        const ctx10 = document.getElementById('ExampleChart').getContext('2d');
+        const myChart10 = new Chart(ctx10, {
+            type: 'line',
+            data: {
+                labels: ['20.4','21.4','22.4','23.4','24.4'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [15,15.4,15.3,15.9,16.3,17],
+                    backgroundColor: [
+                        'rgba(49, 210, 108, 0.1)',
+                    ],
+                    borderColor: [
+                        'rgb(49, 210, 108)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            title: {
+            display: false,
+            text: ''
+            },
+            tooltips: {
+            enabled: false,
+            mode: 'label',
+            },
+            elements:{
+                point:{
+                    borderWidth: 0,
+                    radius: 0,
+                    backgroundColor: 'rgba(0,0,0,0)'
+                        }
+                    
+            },
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    ticks: {
+                        maxTicksLimit: 5,
+                        display: false,
+                    },
+                    gridLines: {
+                    display: false,
+                    color: 'rgba(255, 255, 255, 0.1)',
+                    },
+                    scaleLabel: {
+                    display: false,
+                    labelString: ''
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    ticks: {
+                        maxTicksLimit: 5,
+                        display: false,
+                    },
+                    gridLines: {
+                    display: false,
+                    color: 'rgba(255, 255, 255, 0.1)',
+                    },
+                    scaleLabel: {
+                    display: false,
+                    labelString: ''
+                    },
+                }],
+            }
+        }
+    });
+    </script>
+
+    {% for stock in stocks %}
+    <script>
+    
+        const ctx{{forloop.counter}} = document.getElementById('Chart-{{forloop.counter0}}').getContext('2d');
+        const myChart{{forloop.counter}} = new Chart(ctx{{forloop.counter}}, {
+            type: 'line',
+            data: {
+                labels: {{stock.dates|safe}},
+                datasets: [{
+                    label: '# of Votes',
+                    data: {{stock.stock_prices|safe}},
+                    backgroundColor: [
+                        'rgba({{stock.chart_colors}},0.1)',
+                    ],
+                    borderColor: [
+                        'rgb({{stock.chart_colors}})',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            title: {
+            display: false,
+            text: ''
+            },
+            tooltips: {
+            enabled: false,
+            mode: 'label',
+            },
+            elements:{
+                point:{
+                    borderWidth: 0,
+                    radius: 0,
+                    backgroundColor: 'rgba(0,0,0,0)'
+                        }
+                    
+            },
+            legend: {
+                display: false
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    ticks: {
+                        fontColor: 'rgba(255, 255, 255, 0.5',
+                        maxTicksLimit: 5,
+                        maxRotation: 0,
+                        minRotation: 0,
+                        fontSize: 10,
+                        fontStyle: 0,
+                    },
+                    gridLines: {
+                    display: false,
+                    color: 'rgba(255, 255, 255, 0.1)',
+                    borderDash: [8, 4],
+                    },
+                    scaleLabel: {
+                    display: false,
+                    labelString: ''
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    ticks: {
+                        fontColor: 'rgba(255, 255, 255, 0.5',
+                        maxTicksLimit: 5,
+                        maxRotation: 0,
+                        minRotation: 0,
+                        fontSize: 10,
+                        fontStyle: 0,
+                    },
+                    gridLines: {
+                    display: false,
+                    color: 'rgba(255, 255, 255, 0.1)',
+                    borderDash: [8, 4],
+                    },
+                    scaleLabel: {
+                    display: false,
+                    labelString: ''
+                    }
+                }],
+            }
+        }
+    });
+    </script>
+    {% endfor %}
+
+    {% for city in cities %}
+    <div class="weather-widget">
+        <div class="grid-container">
+            <div class="grid-item">
+                <img src="/static/img/weatherWidget/{{city.time}}/{{city.condition}}.png">
+            </div>
+            <div class="grid-item">
+                <h1>{{city.city}}</h1>
+            </div>
+            <div class="grid-item">
+                <h1>{{city.temperature}} °C</h1>
+            </div>
+        </div>
+        <h1>{{city.condition}}</h1>
+        <div class="lower-content">
+            <div>
+                <img src="/static/img/weatherWidget/wind_speed.png">
+            </div>
+            <div>
+                <h1>{{city.wind_speed}} m/s</h1>
+            </div>
+        </div>
+
+
+    </div>  
+    {% endfor %}
+    
+
+    <div id="BackgroundMenu" class="BackgroundMenu">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeBackgroundMenu()">&times;</a>
+        <div class="grid-container">
+
+            {% for background in backgrounds %}
+                <div class="grid-item">
+                    <button style="background: url(/static/img/{{background.name}}); background-size:cover; border: 0px; width: 150px; height: 150px; border-radius: 5px; margin: 10px;" onclick="location.href='{% url 'change-background' background.id %}'"></button>
+                </div>
+            {% endfor %}
+        </div>    
+    </div>
+
+ 
+    {% block content %}{% endblock %}
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+
+
+</html>
