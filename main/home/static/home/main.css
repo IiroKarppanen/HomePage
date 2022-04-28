@@ -43,7 +43,7 @@
 
   .foreground .shortcut_button .grid-item button{
     opacity: 0;
-    background: url(/static/img/delete.png); 
+    background: url(/static/img/siteimages/delete.png); 
     width: 16px; 
     height: 16px; 
     border: 0px; 
@@ -461,4 +461,79 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+.apps-openButton{
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.apps-menu .closebtn {
+  position: absolute;
+  top: 0;
+  color: rgba(224, 224, 224, 0.797);
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+
+
+.apps-menu {
+  height: 400px; /* 100% Full-height */
+  width: 0; /* 0 width - change this with JavaScript */
+
+  z-index: 1; /* Stay on top */
+  position: absolute;
+  top: 40px;
+  right: 5px;
+  border-radius: 5px;
+  background-color: rgba(37, 37, 37, 0.42); /* Black*/
+  backdrop-filter: blur(20px);
+  overflow-x: hidden;
+  padding-top: 50px; /* Place content 60px from the top */
+  transition: 0.1s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+.apps-menu .grid-container {
+  display: grid;
+  margin-left: 30px;
+  margin-bottom: 30px;
+  justify-content: flex-start;
+  grid-template-columns: auto auto auto;
+
+}
+
+.apps-menu .grid-item {
+  color: #ffffffd6;
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+}
+
+.apps-menu .app_button{
+  text-decoration: none;
+}
+
+.apps-menu .app_button .grid-item img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+}
+
+
+.apps-menu .app_button .grid-item{
+  display: grid;
+  grid-template-columns: auto;
+}
+
+.apps-menu .grid-item h1{
+  font-size: 12px;
+  text-align: center;
+}
+
+.apps-menu .grid-item:hover{
+  background: rgba(144, 144, 144, 0.13);    
 }

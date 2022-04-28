@@ -1,23 +1,19 @@
-from cProfile import label
-from tkinter.ttk import LabeledScale
-from turtle import back
 from django.shortcuts import render, redirect
 from .models import background, shortcut, stock, weather
 from .forms import shortcutForm, stockForm, weatherForm
 import favicon
 import os
-import requests, json
+import requests
 from PIL import Image
-
 from yahooquery import Ticker
 from yahoo_fin import stock_info
-from datetime import datetime as dt, timedelta, timezone
+from datetime import datetime as dt, timedelta
 import datetime
 import numpy as np
 
-# Create your views here.
-
 def get_data():
+
+    # This function gets the values for widgets and shortcuts from database
 
     shortcuts = shortcut.objects.all()
 
@@ -25,36 +21,31 @@ def get_data():
     for i in shortcuts.iterator():
         urls.append(i.site_url)
 
-    # Calculate how many add shortcut button to use and make a list
-    amount = 10 - shortcut.objects.count()
-
-    shortcut_list = []
-
-    for i in range(amount):
-        shortcut_list.append("Add Shortcut")
-
     # Check if home screen has any widgets, return if false
     if stock.objects.exists() == False and weather.objects.exists() == False:
         shortcut_context = {
         'shortcuts': shortcuts,
-        'shortcut_list': shortcut_list,
          }
         return shortcut_context 
 
     # Calculate if data should be updated, updates every 5 mins.
 
     try:
+        # Get last_update value 
         stocks = stock.objects.all()
         timestamps = []
         for i in stocks.iterator():
             timestamps.append(i.last_update)
         date_time_str = timestamps[0]
     except:
+        # if there are no stock widgets get timestamps from weather widgets
         cities = weather.objects.all()
         timestamps = []
         for i in cities.iterator():
             timestamps.append(i.last_update)
         date_time_str = timestamps[0]
+    
+    # Convert datetime timestamp to minutes since
             
     date_time_obj = dt.strptime(date_time_str, '%Y-%m-%d %H:%M:%S.%f')
     last_update = dt.today() - date_time_obj
@@ -72,13 +63,11 @@ def get_data():
 
     shortcut_context = {
         'shortcuts': shortcuts,
-        'shortcut_list': shortcut_list,
         'stocks': stocks,
         'cities': cities
     }
 
     return shortcut_context 
-
 
 def home(request):
 
@@ -97,6 +86,14 @@ def home(request):
     context['form3'] = form3
     context['site_background'] = current_background
     context['backgrounds'] = backgrounds
+
+    # lists of google app names and urls for the apps menu
+    google_apps = ['Search', 'Youtube','Maps' ,'Gmail','Drive', 'Play', 'Calendar','news','Meet','Chat','Translate','Blogger','Keep','Earth','Classroom','Docs','Sheets', 'Forms', 'Slides', 'Photos', 'Stadia']
+    app_urls = ['https://www.google.com','https://www.youtube.com/','https://www.google.com/maps','https://mail.google.com/mail','https://drive.google.com/drive/', 'https://play.google.com/store', 'https://calendar.google.com/calendar','https://news.google.com/topstories?tab=rn&hl=en-US&gl=US&ceid=US:en','https://meet.google.com/','https://mail.google.com/chat/','https://translate.google.com','https://www.blogger.com/about/','https://keep.google.com','https://earth.google.com/web/', 'https://classroom.google.com', 'https://docs.google.com/document','https://docs.google.com/spreadsheets', 'https://docs.google.com/forms', 'https://docs.google.com/presentation/','https://photos.google.com','https://stadia.google.com/']
+
+    # Combine lists 
+    apps = zip(google_apps, app_urls)
+    context['apps'] = apps
 
     if 'submit-form1' in request.POST:
         form = stockForm(request.POST)
@@ -177,33 +174,35 @@ def home(request):
 
             # Get site icon
 
+            root_dir = os.path.dirname(os.path.abspath(__file__))
+
             try:
-            
+
                 url = favicon.get(form3.instance.site_url)
                 url = url[0].url
-
+                
                 # With youtube shortcut use custom icon
                 if "youtube" in url:
-                    path = r'C:\Users\iirok\OneDrive\Desktop\HomePage\main\home\static\img'
-                    output = os.path.join(path, "youtube_default.png")
+                    output = root_dir + r"/static/img/youtube_default.png"
                     image = Image.open(output)
-                    output = os.path.join(path, str(form3.instance.name) + ".png")
+                    filepath = root_dir + r"/static/img"
+                    output = os.path.join(filepath, str(form3.instance.name) + ".png")
                     image.save(fp=output)
                     return redirect('home')
 
-                # With google use custom icon
+                # With google shortcut use custom icon
                 if "google" in url or "Google" in url or "drive" in url:
-                    path = r'C:\Users\iirok\OneDrive\Desktop\HomePage\main\home\static\img'
-                    output = os.path.join(path, "google_default.png")
+                    output = root_dir + r"/static/img/google_default.png"
                     image = Image.open(output)
-                    output = os.path.join(path, str(form3.instance.name) + ".png")
+                    filepath = root_dir + r"/static/img"
+                    output = os.path.join(filepath, str(form3.instance.name) + ".png")
                     image.save(fp=output)
                     return redirect('home')
 
                 # Download icon from site
-
-                path = r'C:\Users\iirok\OneDrive\Desktop\HomePage\main\home\static\img'
-                output = os.path.join(path, str(form3.instance.name) + ".png")
+                filepath = root_dir + r"/static/img"
+                
+                output = os.path.join(filepath, str(form3.instance.name) + ".png")
 
                 r = requests.get(url)
                 with open(output, 'wb') as outfile:
@@ -222,11 +221,11 @@ def home(request):
             except:
 
                 # Use default icon if site icon is not available
-
-                path = r'C:\Users\iirok\OneDrive\Desktop\HomePage\main\home\static\img'
-                output = os.path.join(path, "default_shortcut.png")
+                
+                output = root_dir + r"/static/img/siteimages/default_shortcut.png"
                 image = Image.open(output)
-                output = os.path.join(path, str(form3.instance.name) + ".png")
+                filepath = root_dir + r"/static/img"
+                output = os.path.join(filepath, str(form3.instance.name) + ".png")
                 image.save(fp=output)
               
             return redirect('home')
@@ -237,8 +236,10 @@ def delete_shortcut(request, item_id):
     item = shortcut.objects.get(pk=item_id)
     item.delete()
 
+    root_dir = os.path.dirname(os.path.abspath(__file__))
+
     try:
-        to_delete = os.path.join(r'C:\Users\iirok\OneDrive\Desktop\HomePage\main\home\static\img', str(item) + str(".png"))
+        to_delete = os.path.join(root_dir, r'/static/img', str(item) + str(".png"))
         os.remove(to_delete)
     except:
         pass
@@ -399,39 +400,4 @@ def change_background(request, background_id):
     new_background.save()
     
     return redirect('home')
-
-    
-# To do
-# Fix weather icons
-# Rework shortcut form
-# Add login with google
-# Add google apps
-# Add background from files (optional)
-
-# Done 26.4
-# Added time variable to weather widgets, now displays day or night icons
-# Added default shortcut icon for google
-# Added background menu
-
-# Done 25.4
-# Added weather widget
-# Reworked shortcut buttons
-# Added delete button to widgets
-
-# Done 24.4
-# Added stock chart widgets
-# Set stock widgets data to database and update it every 5 mins
-# Added widget menu
-
-
-
-
-
-    
-
-    
-    
-
-
-
 

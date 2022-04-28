@@ -21,7 +21,8 @@
 
 </head>
 
-<body style="background: #000000 url('/static/img/{{site_background}}'); background-size: cover;">
+
+<body style="background: #000000 url('/static/img/backgrounds/{{site_background}}'); background-size: cover;">
      <div class="wrapper">
         <div class="background"></div>
         <div class="foreground">
@@ -43,7 +44,7 @@
                     <a onclick="openAddShortcut()" class="shortcut_button">
                         <div class="grid-item">
                             <h8 style="height: 16px; margin: 5px;"></h8>
-                            <img src="/static/img/add.png">
+                            <img src="/static/img/siteimages/add.png">
                             <h1>Add Shortcut</h1>
                         </div>
                     </a>
@@ -109,7 +110,7 @@
     </div>
       
     <span style="margin-top: 10px;" onclick="openNav()">
-        <img src="/static/img/settings.png">
+        <img src="/static/img/siteimages/settings.png">
     </span>
       
     <script>
@@ -135,6 +136,14 @@
       
       function closeAddShortcut() {
         document.getElementById("AddShortcut").style.width = "0";
+      }
+
+      function openApps() {
+        document.getElementById("apps-menu").style.width = "300px";
+      }
+      
+      function closeApps() {
+        document.getElementById("apps-menu").style.width = "0";
       }
     </script>
 
@@ -352,11 +361,32 @@
 
             {% for background in backgrounds %}
                 <div class="grid-item">
-                    <button style="background: url(/static/img/{{background.name}}); background-size:cover; border: 0px; width: 150px; height: 150px; border-radius: 5px; margin: 10px;" onclick="location.href='{% url 'change-background' background.id %}'"></button>
+                    <button style="background: url(/static/img/backgrounds/{{background.name}}); background-size:cover; border: 0px; width: 150px; height: 150px; border-radius: 5px; margin: 10px;" onclick="location.href='{% url 'change-background' background.id %}'"></button>
                 </div>
             {% endfor %}
         </div>    
     </div>
+
+    <div id="apps-menu" class="apps-menu">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeApps()">&times;</a>
+
+        <div class="grid-container">
+
+            {% for app, url in apps %}
+                <a href="{{url}}" class="app_button">
+                    <div class="grid-item">
+                        <img src="\static\img\apps\{{app}}.png">
+                        <h1>{{app}}</h1>
+                    </div>
+                </a>                        
+            {% endfor %}
+
+        </div>      
+    </div>
+
+    <span style="float: right;" onclick="openApps()" class="apps-openButton">
+        <img src="/static/img/siteimages/apps.png">
+    </span>
 
  
     {% block content %}{% endblock %}

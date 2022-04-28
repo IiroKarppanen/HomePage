@@ -1,0 +1,9 @@
+Django==4.0.1
+favicon==0.7.0
+Pillow==8.3.2
+yahooquery==2.2.15
+yahoo_fin==0.8.9.1
+DateTime==4.3
+numpy==1.21.2
+gunicorn==20.1.0
+django-heroku==0.3.1
